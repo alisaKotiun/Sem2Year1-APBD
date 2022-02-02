@@ -1,0 +1,64 @@
+﻿@page "/students"
+
+
+<h3>Students</h3>
+@inject IJSRuntime js
+@inject NavigationManager NavigationManager
+
+@if (_students == null)
+{
+    <img src="https://media0.giphy.com/media/3oEjI6SIIHBdRxXI40/200.gif" alt="Loading" />
+}
+else if (_students.GetStudents().Count == 0)
+{
+    <span>There are not students</span>
+}
+else
+{
+    <table class="table">
+        <tr style="font-weight:bold">
+            <td>Avatar</td>
+            <td @onclick="@(() => SortStudents("FirstName"))">FirstName</td>
+            <td @onclick="@(() => SortStudents("LastName"))">LastName</td>
+            <td @onclick="@(() => SortStudents("BirthDate"))">BirthDate</td>
+            <td @onclick="@(() => SortStudents("Studies"))">Studies</td>
+        </tr>
+        @foreach (var s in _students.GetStudents())
+        {
+            <tr>
+                <td @onclick="@(() => NavigateToDetails(s.IdStudent))"><img src=@s.Avatar alt="Avatar" width="40" height="40" /></td>
+                <td>@s.FirstName</td>
+                <td>@s.LastName</td>
+                <td>@s.BirthDate</td>
+                <td>@s.Studies</td>
+                <td><button style="color:white; background-color:red" @onclick="() => Delete(s.IdStudent)">X</button></td>
+            </tr>
+        }
+    </table>
+}
+
+@code
+{
+    private StudentsDb _students;
+    protected override void OnInitialized()
+    {
+        _students = new StudentsDb();
+    }
+
+    private void SortStudents(string collumnName)
+    {
+        _students.SortStudents(collumnName);
+    }
+
+    private async Task Delete(int id)
+    {
+        var confirmed = await js.InvokeAsync<bool>("confirm", "Do you want to delete a student?");
+        _students.DeleteStudent(id, confirmed);
+    }
+
+    private void NavigateToDetails(int id)
+    {
+        NavigationManager.NavigateTo($"students/details/{id}");
+    }
+}
+

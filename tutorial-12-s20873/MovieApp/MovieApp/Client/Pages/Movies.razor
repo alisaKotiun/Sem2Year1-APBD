@@ -1,0 +1,28 @@
+﻿@page "/movies"
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+
+@inject IMoviesRepository moviesRepository
+@attribute [Authorize]
+@inject HttpClient httpClient
+
+<h3>Movies</h3>
+<div>
+    <h3>In theaters</h3>
+    <a class="btn btn-dark" href="movies/create">New Movie</a>
+    <MoviesList Movies="MoviesList" />
+</div>
+
+@code {
+
+    private List<Movie> MoviesList;
+    protected async override Task OnInitializedAsync()
+    {
+        await GetMovies();
+    }
+
+    private async Task GetMovies()
+    {
+        MoviesList = await moviesRepository.GetMovies();
+    }
+}

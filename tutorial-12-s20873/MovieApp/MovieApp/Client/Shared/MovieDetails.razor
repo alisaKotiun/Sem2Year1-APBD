@@ -1,0 +1,51 @@
+﻿@page "/movie/{MovieId:int}"
+@inject IMoviesRepository moviesRepository
+@inject NavigationManager navigationManager
+
+<h3>Movie Details</h3>
+@if (movie != null)
+{
+    <div>
+        <table>
+            <tbody>
+                <tr>
+                    <td style="font-weight:bold">Title:</td>
+                    <td>@movie.Title</td>
+                </tr>
+                <tr>
+                    <td style="font-weight:bold">Summary:</td>
+                    <td>@movie.Summary</td>
+                </tr>
+                <tr>
+                    <td style="font-weight:bold">Release date:</td>
+                    <td>@movie.ReleaseDate</td>
+                </tr>
+                <tr>
+                    <td style="font-weight:bold">Poster:</td>
+                    <td><img src="@movie.Poster" alt="Poster" class="movie-poster" style="width:300px" /></td>
+                </tr>
+            </tbody>
+        </table>
+        <br />
+        <button type="button" class="btn btn-success" @onclick="Navigate">Return</button>
+    </div>
+}
+else
+{
+    <img src="https://media.giphy.com/media/3oEjI6SIIHBdRxXI40/giphy.gif" />
+}
+
+@code {
+    [Parameter] public int MovieId { get; set; }
+    private Movie movie;
+
+    protected override async Task OnInitializedAsync()
+    {
+        movie = await moviesRepository.GetDetailsMovieDTO(MovieId);
+    }
+
+    private void Navigate()
+    {
+        navigationManager.NavigateTo("movies");
+    }
+}

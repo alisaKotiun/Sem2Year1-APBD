@@ -1,0 +1,18 @@
+﻿@page "/movies/create"
+@inject IMoviesRepository moviesRepository
+@inject NavigationManager navigationManager
+
+<h3>Create Movie</h3>
+
+<MovieForm Movie="movie" OnValidSubmit="Create" />
+
+
+@code {
+    private Movie movie = new Movie();
+
+    private void Create()
+    {
+        moviesRepository.CreateMovie(movie);
+        navigationManager.NavigateTo("movies");
+    }
+}

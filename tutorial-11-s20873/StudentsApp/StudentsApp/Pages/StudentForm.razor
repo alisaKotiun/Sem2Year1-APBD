@@ -1,0 +1,45 @@
+﻿@page "/students/details/{StudentId:int}"
+@inject NavigationManager NavigationManager
+
+<h3>Student's details</h3>
+
+<table>
+    <tr>
+        <td>First Name: </td>
+        <td>@student.FirstName</td>
+        <td>Avatar: </td>
+        <td>@student.Avatar</td>
+    </tr>
+    <tr>
+        <td>Last Name: </td>
+        <td>@student.LastName</td>
+        <td></td>
+        <td rowspan="3" valign="middle" align="center"><img src=@student.Avatar alt="Avatar" width="100" height="100" /></td>
+    </tr>
+    <tr>
+        <td>BirthDate: </td>
+        <td>@student.BirthDate</td>
+    </tr>
+    <tr>
+        <td>Studies: </td>
+        <td>@student.Studies</td>
+    </tr>
+    <tr>
+        <td><br><button style="color:white; background-color:blue" @onclick="@(() => NavigateFromDetails())">Return</button></td>
+    </tr>
+</table>
+
+@code {
+    [Parameter] public int StudentId { get; set; }
+    private Student student;
+
+    protected override void OnInitialized()
+    {
+        student = new StudentsDb().GetStudent(StudentId);
+    }
+
+    private void NavigateFromDetails()
+    {
+        NavigationManager.NavigateTo("students");
+    }
+}
